@@ -3,8 +3,8 @@ public class Main {
     {
         Aeroport aeroport = new Aeroport();
 
-        Avion avion = new Avion("gab airline", aeroport);
+        new Avion("gab airline", aeroport).start();
 
-        avion.atterissage();
+
     }
 }
