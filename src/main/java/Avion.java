@@ -11,9 +11,10 @@ public class Avion extends Thread{
     }
 
 
-    public void atterissage()
+    public void atterissage() throws InterruptedException
     {
-        int autorisation = aeroport. demanderAutorisation();
+        int autorisation = aeroport.demanderAutorisation();
+        System.out.println("Demande d'autorisation pour: " +getName()+ " => autorisation obtenue avec le no "+ autorisation);
         int atterirStatus = aeroport.atterir(autorisation, compagnie);
         System.out.println(getName() +" status: "+ atterirStatus +" (1 = success, -1 = failed)");
     }
@@ -21,6 +22,10 @@ public class Avion extends Thread{
     @Override
     public void run()
     {
-        this.atterissage();
+        try {
+            this.atterissage();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
