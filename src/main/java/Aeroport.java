@@ -1,7 +1,7 @@
 public class Aeroport {
 
     private int num_autorisation = 0;
-    private  boolean landingOnGoing = false;
+    private int lastAuthorizedLanding = 0;
 
     public Aeroport(){
 
@@ -14,25 +14,30 @@ public class Aeroport {
      * @param compagnie
      * @return
      */
-    public synchronized int atterir(int autorisation, String compagnie)
-    {
+    public synchronized int atterir(int autorisation, String compagnie) throws InterruptedException {
 
         if(!verifierAutorisation(autorisation))
         {
-            System.out.println("Atterissage refusé pour la compagnie "+ compagnie);
+            System.out.println("Atterissage refusé pour la compagnie (auth: "+autorisation+":"+"- mise en attente  "+ compagnie);
+            wait();
+            atterir(autorisation, compagnie);
             return -1;
         }
 
         System.out.println("Atterissage reussi pour la compagnie "+ compagnie);
-        landingOnGoing = false;
         notifyAll();
         return 1;
     }
 
     private boolean verifierAutorisation(int autoriation)
     {
-
-        return autoriation == num_autorisation;
+        if(lastAuthorizedLanding+1 == autoriation)
+        {
+            System.out.println("verification pour l'autorisation no: "+autoriation);
+            lastAuthorizedLanding++;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -41,14 +46,10 @@ public class Aeroport {
      * @return no d'authorisation
      * @throws InterruptedException
      */
-    public synchronized int demanderAutorisation() throws InterruptedException
+    public synchronized int demanderAutorisation()
     {
-        if(landingOnGoing)
-        {
-            wait();
-        }
+
         this.num_autorisation++;
-        landingOnGoing = true;
         return num_autorisation;
 
     }

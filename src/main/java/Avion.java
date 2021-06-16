@@ -15,8 +15,8 @@ public class Avion extends Thread{
     {
         int autorisation = aeroport.demanderAutorisation();
         System.out.println("Demande d'autorisation pour: " +getName()+ " => autorisation obtenue avec le no "+ autorisation);
-        int atterirStatus = aeroport.atterir(autorisation, compagnie);
-        System.out.println(getName() +" status: "+ atterirStatus +" (1 = success, -1 = failed)");
+        setPriority(autorisation);
+        aeroport.atterir(autorisation, compagnie);
     }
 
     @Override
